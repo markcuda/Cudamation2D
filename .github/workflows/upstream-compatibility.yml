@@ -1,0 +1,51 @@
+name: Cudamation2D Upstream Compatibility
+
+on:
+  schedule:
+    - cron: "17 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+
+concurrency:
+  group: upstream-compatibility
+  cancel-in-progress: false
+
+jobs:
+  prepare-candidate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out product branch
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Fetch product and upstream lines
+        run: |
+          git remote add upstream https://github.com/tahoma2d/tahoma2d.git
+          git fetch origin master codex/upstream-candidate || git fetch origin master
+          git fetch upstream master
+
+      - name: Merge upstream candidate
+        run: |
+          git config user.name "cudamation2d-upstream-bot"
+          git config user.email "actions@users.noreply.github.com"
+          if git show-ref --verify --quiet refs/remotes/origin/codex/upstream-candidate; then
+            git switch --create codex/upstream-candidate --track origin/codex/upstream-candidate
+            git merge --no-edit origin/master
+          else
+            git switch --create codex/upstream-candidate origin/master
+          fi
+          git merge --no-edit upstream/master
+          git push origin codex/upstream-candidate
+
+      - name: Dispatch cross-platform builds
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run macOS_build.yml --ref codex/upstream-candidate
+          gh workflow run linux_build.yml --ref codex/upstream-candidate
+          gh workflow run windows_build.yml --ref codex/upstream-candidate

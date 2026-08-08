@@ -25,8 +25,14 @@ understand and coordinate.
 
 ## Decision
 
-Cudamation2D is a downstream fork of `tahoma2d/tahoma2d` with upstream history
-preserved. It is the animation workstation and the automation product.
+Cudamation2D is a thin downstream fork of `tahoma2d/tahoma2d` with upstream
+history preserved. It is the animation workstation and the automation product.
+
+The implementation is extension-first. A capability belongs in a plugin,
+script, or external adapter when those supported interfaces can provide the
+complete feature. A downstream core patch is allowed when Tahoma exposes no
+safe seam for a required capability; Cudamation2D will not drop that capability
+merely to remain plugin-only.
 
 Cudamation2D will add one typed operation layer inside the Tahoma application.
 The UI, native CLI, MCP server, and AI workflows will share those operations.
@@ -35,6 +41,11 @@ Tahoma menu command identifiers are not a public API.
 Internal Tahoma and Toonz names remain unless changing them creates direct user
 value. User-visible branding changes are isolated from automation behavior so
 upstream merges remain manageable.
+
+Generally useful fixes and extension seams should be proposed upstream. The
+remaining downstream patch is isolated, measured, and continuously tested
+against `upstream/master`. Upstream candidates are never merged into the
+product branch automatically.
 
 ## Alternatives considered
 
@@ -60,6 +71,8 @@ professional animation workstation to build.
 - The project inherits Tahoma's C++17, Qt 5, CMake, platform packaging, and
   third-party dependency surface.
 - The fork must continually integrate valuable upstream Tahoma fixes.
+- A scheduled candidate merge and cross-platform build reveal conflicts before
+  an upstream update reaches users.
 - Automation must respect Tahoma scene, threading, and undo invariants.
 - Existing Rust code is ported selectively; it is not imported wholesale.
 - Cudamation-specific interfaces need explicit compatibility and deprecation

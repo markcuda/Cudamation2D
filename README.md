@@ -16,6 +16,8 @@ introduced incrementally. Do not expect CLI, MCP, or AI functionality yet.
 
 The first automation milestone is documented in
 [doc/cudamation2d/automation-architecture.md](./doc/cudamation2d/automation-architecture.md).
+The downstream maintenance contract is documented in
+[doc/cudamation2d/upstream-sync.md](./doc/cudamation2d/upstream-sync.md).
 
 ## Development
 
@@ -30,9 +32,10 @@ Windows and Linux.
 
 ## Upstream
 
-`upstream` points to `tahoma2d/tahoma2d`. Cudamation2D changes should stay
-focused and minimize unnecessary conflicts so Tahoma fixes can continue to flow
-into the fork.
+`upstream` points to `tahoma2d/tahoma2d`. Cudamation2D is extension-first: use
+Tahoma's supported interfaces when they preserve the full product, and patch
+the application only where a required automation seam does not exist. Upstream
+updates are tested on a candidate branch before a human-controlled merge.
 
 ## Licensing
 
