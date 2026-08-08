@@ -2,6 +2,9 @@
 
 Status: accepted foundation; implementation pending baseline build.
 
+Decision record:
+[ADR-0001](../decisions/0001-build-cudamation2d-on-tahoma2d.md).
+
 ## Product boundary
 
 Cudamation2D is a downstream Tahoma2D distribution, not a separate animation
